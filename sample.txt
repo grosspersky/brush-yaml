@@ -1,0 +1,32 @@
+# This is a Dockerfile sample (https://github.com/geli-lms/geli/blob/develop/.docker/api/Dockerfile)
+test:ktlint:
+  image: docker-registry.example.com/docker-code-analysis/android
+  stage: test
+  script:
+    - ktlint --reporter=plain?group_by_file --reporter=html,artifact=com.github.mcassiano:ktlint-html-reporter:0.2.0,output=quality/ktlint.html "app/src/**/*.kt"
+  only:
+    - branches
+  except:
+    - tags
+  artifacts:
+    when: always
+    paths:
+      - quality/ktlint.html
+  tags:
+    - docker
+test:detekt:
+  image: docker-registry.example.com/docker-code-analysis/android
+  stage: test
+  script:
+    - /usr/local/bin/detekt
+  only:
+    - branches
+  except:
+    - tags
+  artifacts:
+    when: always
+    paths:
+      - quality/detekt.html
+      - quality/detekt.xml
+  tags:
+    - docker
